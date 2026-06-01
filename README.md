@@ -69,7 +69,7 @@ L'application de ce protocole a mis en lumière trois caractéristiques dynamiqu
 
 - **Patinage asymétrique (jusqu'à 0,5 m/s) :** Perte d'adhérence massive concentrée sur l'axe latéral (Y). La modélisation démontre que lors d'un déplacement de côté, les moteurs tournent à la vitesse commandée mais le châssis glisse en raison d'une opposition forcée des forces géométriques. Cet effet est minimal sur l'axe X (longitudinal).
 
-- **Sollicitations impulsionnelles (Pics à 2,08 G) :** Violents chocs verticaux enregistrés sur `/imu` (atteignant $20,45\text{ m/s}^2$). Ils proviennent du passage discontinu d'un galet incliné à l'autre sur le sol combiné aux rattrapages brusques d'adhérence en fin de glissement.
+- **Sollicitations impulsionnelles (Pics à 2,08 G) :** Violents chocs verticaux enregistrés sur `/imu` (atteignant $20,446\text{ m/s}^2$). Ils proviennent du passage discontinu d'un galet incliné à l'autre sur le sol combiné aux rattrapages brusques d'adhérence en fin de glissement.
 
 ---
 
