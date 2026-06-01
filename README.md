@@ -15,11 +15,8 @@ L'objectif de ce projet est de fournir un environnement complet pour étudier et
 - [Protocole Expérimental & Architecture ROS 2](#protocole-expérimental--architecture-ros-2)
 - [Résultats Clés](#résultats-clés)
 - [Quick Start](#quick-start)
-- [Structure du Dépôt](#structure-du-dépôt)
-- [Contenu Détaillé](#contenu-détaillé)
+- [Contenu du Dépôt](#contenu-du-dépôt)
 - [Perspectives](#perspectives)
-- [Installation Complète](#installation-complète)
-- [Contributing](#contributing)
 - [Licence](#licence)
 
 ---
@@ -45,14 +42,14 @@ L'architecture logicielle embarquée repose sur l'écosystème ROS 2 Jazzy. Plus
 
 ### Phase 2 : Traitement et Analyse Logicielle (Reproductible sur n'importe quel PC)
 
-1. **Extraction des données :** Le fichier d'enregistrement ROS 2 (`.mcap`) est converti en fichiers textuels standardisés pour faciliter l'analyse hors-ligne :
+1. **Extraction des données :** Le fichier d'enregistrement ROS 2 (`.mcap`) a été exporté sous forme de fichiers textuels standardisés inclus à la racine de ce dépôt :
    * `cmd_vel_full.csv` : Historique des consignes cinématiques.
    * `odom_full.csv` : Historique des vitesses odométriques réelles.
    * `imu_full.csv` : Historique des accélérations et vitesses angulaires (échantillonné à 50 Hz).
 
-2. **Synchronisation temporelle :** Les topics ROS 2 publiant à des fréquences et des instants asynchrones, un script Python réaligne l'intégralité des lignes sur une grille temporelle uniforme (1 ms).
+2. **Synchronisation temporelle :** Les topics ROS 2 publiant à des fréquences et des instants asynchrones, les scripts Python réalignent l'intégralité des lignes sur une grille temporelle uniforme par rapport au premier point d'odométrie ($t_0 = 0\text{ s}$).
 
-3. **Calcul des métriques :** Le script isole les écarts entre consigne et odométrie pour quantifier le patinage, mesure le décalage temporel (latence) à l'allumage, et applique un traitement statistique multi-axe.
+3. **Calcul des métriques :** Les scripts isolent les écarts entre consigne et odométrie pour quantifier le patinage, mesurent le décalage temporel (latence) à l'allumage, et extraient l'intensité des chocs mécaniques.
 
 ---
 
@@ -70,9 +67,9 @@ L'application de ce protocole a mis en lumière trois caractéristiques dynamiqu
 
 - **Latence de transport (17,3 ms) :** Temps mort incompressible mesuré entre l'émission du message sur `/cmd_vel` et la réaction physique enregistrée sur `/odom`. Critique pour les boucles de contrôle temps réel.
 
-- **Patinage asymétrique (jusqu'à 0,5 m/s) :** Perte d'adhérence massive concentrée sur l'axe latéral (Y). La modélisation démontre que lors d'un déplacement de côté, les moteurs tournent à la vitesse commandée mais le chassis glisse. Cet effet est absent ou minimal sur l'axe X (longitudinal).
+- **Patinage asymétrique (jusqu'à 0,5 m/s) :** Perte d'adhérence massive concentrée sur l'axe latéral (Y). La modélisation démontre que lors d'un déplacement de côté, les moteurs tournent à la vitesse commandée mais le châssis glisse en raison d'une opposition forcée des forces géométriques. Cet effet est minimal sur l'axe X (longitudinal).
 
-- **Sollicitations impulsionnelles (Pics à 2,08 G) :** Violents chocs verticaux enregistrés sur `/imu`. Ils proviennent du passage discontinu d'un galet à l'autre sur le sol combiné aux raccords de surface.
+- **Sollicitations impulsionnelles (Pics à 2,08 G) :** Violents chocs verticaux enregistrés sur `/imu` (atteignant $20,45\text{ m/s}^2$). Ils proviennent du passage discontinu d'un galet incliné à l'autre sur le sol combiné aux rattrapages brusques d'adhérence en fin de glissement.
 
 ---
 
@@ -81,7 +78,6 @@ L'application de ce protocole a mis en lumière trois caractéristiques dynamiqu
 ### Prérequis
 
 - Python 3.10+
-- ROS 2 Jazzy
 - Dépendances Python : `pandas`, `numpy`, `matplotlib`
 
 ### Utilisation Rapide
@@ -94,10 +90,11 @@ cd KAYOR_XPLR
 # Installe les dépendances
 pip install -r requirements.txt
 
-# Exécute l'analyse complète
-python scripts/extract_data.py <chemin_vers_rosbag2.mcap>
-python scripts/synchronize_data.py
-python scripts/analyze_metrics.py
+# Génère l'analyse comparative des axes X et Y
+python graph.py
 
-# Génère les graphiques
-python scripts/plot_analysis.py
+# Génère l'analyse micrométrique de la latence initiale (17,3 ms)
+python micro.py
+
+# Génère l'analyse globale de la télémétrie et des vibrations
+python kayor_telem_log.py
