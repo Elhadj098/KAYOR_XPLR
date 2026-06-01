@@ -19,7 +19,7 @@ L'architecture logicielle embarquée repose sur l'écosystème ROS 2 Jazzy. Plus
 4. **Enregistrement par Rosbag2 :** En tâche de fond, l'outil natif de journalisation est activé via la commande `ros2 bag record`. Pendant 137 secondes, il capture et sérialise l'intégralité des messages circulant sur `/cmd_vel`, `/odom` et `/imu` sans interférer avec la boucle de contrôle temps réel.
 
 ### Phase 2 : Traitement et Analyse Logicielle (Reproductible sur n'importe quel PC)
-1. **Extraction des données :** Le fichier d'enregistrement ROS 2 (`.db3` ou `.mcap`) est converti en fichiers textuels standardisés pour faciliter l'analyse hors-ligne :
+1. **Extraction des données :** Le fichier d'enregistrement ROS 2 ( `.mcap`) est converti en fichiers textuels standardisés pour faciliter l'analyse hors-ligne :
    * `cmd_vel_full.csv` : Historique des consignes cinématiques.
    * `odom_full.csv` : Historique des vitesses odométriques réelles.
    * `imu_full.csv` : Historique des accélérations et vitesses angulaires (échantillonné à 50 Hz).
